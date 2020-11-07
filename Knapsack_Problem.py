@@ -12,13 +12,41 @@ def Read_Data():
 
 def Casting_Data(Data):
     # Casting data
-    for i in range(1,len(Data)):
+    for i in range(len(Data)):
         for j in range(3):
             Data[i][j] = int(Data[i][j])
 
-def Fitness(Sample):
-    return 0
 
+def Fitness(Sample,Max_weight,Data):
+
+    # avoid repeating one stock twice or more
+    if(Check_Duplicate_item(Sample) == True):
+        return 0
+
+    sample_weight = 0
+    Sample_profit = 0
+
+    # calculating sample weight
+    for i in Sample:
+        sample_weight += Data[i-1][1]
+    
+    if (sample_weight > Max_weight):
+        # its not possible 
+        return 0
+    else:
+        # it is a feasible answer
+        # calculating sample profit
+        for i in Sample:
+            Sample_profit += Data[i-1][2]
+
+        return Sample_profit 
+    
+
+
+def Check_Duplicate_item(Sample):
+    if len(Sample) == len(set(Sample)):
+        return False
+    return True
 
 def initialization(Data,Population_Size,Max_weight):
     
@@ -33,7 +61,7 @@ def initialization(Data,Population_Size,Max_weight):
         subset_size = random.randint(1,len(Data[:]))
         sample = random.sample(choice_list,subset_size)
         
-        if (Fitness(sample) > 0):
+        if (Fitness(sample,Max_weight,Data) > 0):
             Population_list.append(sample)
             i+=1
 
@@ -43,7 +71,7 @@ def initialization(Data,Population_Size,Max_weight):
 # main
 
 Data = []
-Population_Size = 20
+Population_Size = 200
 Max_iteration = 1000
 Max_weight = 165
 
