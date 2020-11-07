@@ -16,6 +16,30 @@ def Casting_Data(Data):
         for j in range(3):
             Data[i][j] = int(Data[i][j])
 
+def Fitness(Sample):
+    return 0
+
+
+def initialization(Data,Population_Size,Max_weight):
+    
+
+    choice_list = []
+    Population_list = []
+    for i in range(len(Data[:])):
+        choice_list.append(i+1)
+
+    i = 0
+    while (i < Population_Size):
+        subset_size = random.randint(1,len(Data[:]))
+        sample = random.sample(choice_list,subset_size)
+        
+        if (Fitness(sample) > 0):
+            Population_list.append(sample)
+            i+=1
+
+
+    return Population_list
+
 # main
 
 Data = []
@@ -26,4 +50,4 @@ Max_weight = 165
 Read_Data()
 Casting_Data(Data)
 
-print(Data)
+population = initialization(Data,Population_Size,Max_weight)
