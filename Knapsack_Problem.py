@@ -68,17 +68,25 @@ def initialization(Data,Population_Size,Max_weight):
 
     return Population_list
 
-def Knapsack_Problem(Max_iteration,Max_weight,population,Data):
+def Knapsack(Max_iteration,Max_weight,population,Data):
     
     # iterations
-    for i in range(Max_iteration):
-        pass
+    for iter in range(Max_iteration):
+        
         # Cross over
+        # in every iteration, cross over will done 200 times
+        Children = []
+        for i in range(200): 
+            parent1 = random.choice(population)
+            parent2 = random.choice(population)
+            parent1 = parent1[0:int(len(parent1)/2)+1]
+            parent2 = parent2[0:int(len(parent2)/2)+1]
+            Children.append(parent1 + parent2)
 
         # mutation
-
+        
         # calculate fitness and remove some unsuitable population
-
+        
         # create population for the nex generation
 
 # main
@@ -93,4 +101,5 @@ Casting_Data(Data)
 
 # algorithm
 population = initialization(Data,Population_Size,Max_weight)
+Knapsack(Max_iteration,Max_weight,population,Data)
 
