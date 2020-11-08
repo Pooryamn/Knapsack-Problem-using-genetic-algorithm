@@ -28,7 +28,7 @@ def Fitness(Sample,Max_weight,Data):
 
     # calculating sample weight
     for i in Sample:
-        sample_weight += Data[i-1][1]
+        sample_weight += Data[i][1]
     
     if (sample_weight > Max_weight):
         # its not possible 
@@ -37,7 +37,7 @@ def Fitness(Sample,Max_weight,Data):
         # it is a feasible answer
         # calculating sample profit
         for i in Sample:
-            Sample_profit += Data[i-1][2]
+            Sample_profit += Data[i][2]
 
         return Sample_profit 
     
@@ -54,7 +54,7 @@ def initialization(Data,Population_Size,Max_weight):
     choice_list = []
     Population_list = []
     for i in range(len(Data[:])):
-        choice_list.append(i+1)
+        choice_list.append(i)
 
     i = 0
     while (i < Population_Size):
@@ -90,8 +90,13 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
             mutation_thershold = random.randint(0,int((Data_size - len(child))/2))
             for j in range(mutation_thershold):
                 child.append(random.choice(range(Data_size)))
-        # calculate fitness and remove some unsuitable population
         
+        # calculate fitness and remove some unsuitable population
+        feasible_population = []
+        for child in Children:
+            # removing or calculating:
+            if (Fitness(child,Max_weight,Data)> 0):
+                feasible_population.append(child)
         # create population for the nex generation
 
 # main
