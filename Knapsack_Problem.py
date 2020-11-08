@@ -70,6 +70,8 @@ def initialization(Data,Population_Size,Max_weight):
 
 def Knapsack(Max_iteration,Max_weight,population,Data):
     
+    Data_size = len(Data)
+
     # iterations
     for iter in range(Max_iteration):
         
@@ -84,7 +86,10 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
             Children.append(parent1 + parent2)
 
         # mutation
-        
+        for child in Children:
+            mutation_thershold = random.randint(0,int((Data_size - len(child))/2))
+            for j in range(mutation_thershold):
+                child.append(random.choice(range(Data_size)))
         # calculate fitness and remove some unsuitable population
         
         # create population for the nex generation
