@@ -68,6 +68,19 @@ def initialization(Data,Population_Size,Max_weight):
 
     return Population_list
 
+def Knapsack_Problem(Max_iteration,Max_weight,population,Data):
+    
+    # iterations
+    for i in range(Max_iteration):
+        pass
+        # Cross over
+
+        # mutation
+
+        # calculate fitness and remove some unsuitable population
+
+        # create population for the nex generation
+
 # main
 
 Data = []
@@ -78,4 +91,6 @@ Max_weight = 165
 Read_Data()
 Casting_Data(Data)
 
+# algorithm
 population = initialization(Data,Population_Size,Max_weight)
+
