@@ -78,11 +78,11 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
         # Cross over
         # in every iteration, cross over will done 200 times
         Children = []
-        for i in range(200): 
+        for i in range(400): 
             parent1 = random.choice(population)
             parent2 = random.choice(population)
             parent1 = parent1[0:int(len(parent1)/2)+1]
-            parent2 = parent2[0:int(len(parent2)/2)+1]
+            parent2 = parent2[int(len(parent2)/2):]
             Children.append(parent1 + parent2)
 
         # mutation
@@ -91,19 +91,56 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
             for j in range(mutation_thershold):
                 child.append(random.choice(range(Data_size)))
         
+        
+        
         # calculate fitness and remove some unsuitable population
         feasible_population = []
+        fit_arr = []
         for child in Children:
             # removing or calculating:
+            tmp = Fitness(child,Max_weight,Data)
             if (Fitness(child,Max_weight,Data)> 0):
                 feasible_population.append(child)
+                fit_arr.append(tmp)
+        
+        
         # create population for the nex generation
+        # roulette wheel
+        sum_of_fitnesses = sum(fit_arr)
 
+        # calculating probability array:
+        P_array = []
+        for personal_fitness in fit_arr:
+            P_array.append(personal_fitness/sum_of_fitnesses) 
+        
+        # selecting randem children population using thier probability
+        Children_no = int(0.75 * len(fit_arr))
+        parent_no = int(0.25 * len(population))
+        
+        selected_child = random.choices(feasible_population,weights=P_array,k=Children_no)
+        selected_parent = random.choices(population,k=Children_no)
+
+        population = []
+        population = selected_child + selected_parent
+
+        # shffling the population
+        random.shuffle(population)
+
+    # final population:
+    fit_arr = []
+    for person in population:
+            # removing or calculating:
+            tmp = Fitness(person,Max_weight,Data)
+            fit_arr.append(tmp)
+
+    max_index = fit_arr.index(max(fit_arr))
+    return population[max_index],fit_arr[max_index]
+        
 # main
 
 Data = []
-Population_Size = 200
-Max_iteration = 1000
+Population_Size = 1000
+Max_iteration = 5
 Max_weight = 165
 
 Read_Data()
@@ -111,5 +148,15 @@ Casting_Data(Data)
 
 # algorithm
 population = initialization(Data,Population_Size,Max_weight)
-Knapsack(Max_iteration,Max_weight,population,Data)
+person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
+
+solution_array = []
+for i in range(len(Data)):
+    solution_array.append(0)
+for item in person:
+    solution_array[item] = 1
+
+print('Solution : {}'.format(solution_array))
+print('Profit : {}'.format(profit))
+
 
