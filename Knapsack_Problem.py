@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 def Read_Data():
-    with open('Data.csv') as csv_file:
+    with open('Data2.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             Data.append(row)
@@ -141,7 +141,7 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
 Data = []
 Population_Size = 1000
 Max_iteration = 5
-Max_weight = 165
+Max_weight = 500
 
 Read_Data()
 Casting_Data(Data)
