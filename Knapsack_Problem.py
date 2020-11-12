@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 def Read_Data():
-    with open('Data2.csv') as csv_file:
+    with open('Data.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             Data.append(row)
@@ -135,13 +135,44 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
 
     max_index = fit_arr.index(max(fit_arr))
     return population[max_index],fit_arr[max_index]
+
+def Read_config():
+    
+    try:
+        # try to open and read data
+        Fp = open('Config.txt','r')
+        All_lines = Fp.readlines()
+        Fp.close()
+
+        Variables  = []
+        for line in All_lines:
+            Variables.append(int(line.split()[2]))
         
+        Max_iteration = Variables[0]
+        Population_Size = Variables[1]
+        Max_weight = Variables[2]
+
+    except:
+        # file doesn't exist
+        print('File doesn\'t exist you should enter data manualy !')
+        Max_iteration = int(input('Max iteration : '))
+        Population_Size = int(input('Popultion size : '))
+        Max_weight = int(input('Max_weight : '))
+
+        Fp2 = open('Config.txt','w')
+        Fp2.write('Max_iteration = {}\n'.format(Max_iteration))
+        Fp2.write('Population_size = {}\n'.format(Population_Size))
+        Fp2.write('Max_weight = {}\n'.format(Max_weight))
+        Fp2.close()
+
+    return Max_iteration,Population_Size,Max_weight
+
 # main
 
 Data = []
-Population_Size = 1000
-Max_iteration = 5
-Max_weight = 500
+
+Max_iteration,Population_Size,Max_weight= Read_config()
+
 
 Read_Data()
 Casting_Data(Data)
