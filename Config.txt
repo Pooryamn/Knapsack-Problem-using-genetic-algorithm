@@ -1,0 +1,3 @@
+Max_iteration = 5
+Population_size = 1000
+Max_weight = 500
