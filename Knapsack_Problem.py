@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 def Read_Data():
-    with open('Data.csv') as csv_file:
+    with open('Data2.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             Data.append(row)
@@ -114,8 +114,8 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
             P_array.append(personal_fitness/sum_of_fitnesses) 
         
         # selecting randem children population using thier probability
-        Children_no = int(0.75 * len(fit_arr))
-        parent_no = int(0.25 * len(population))
+        Children_no = int(len(fit_arr))
+        parent_no = int(0.80 * len(population))
         
         selected_child = random.choices(feasible_population,weights=P_array,k=Children_no)
         selected_parent = random.choices(population,k=Children_no)
@@ -179,8 +179,13 @@ Casting_Data(Data)
 
 # algorithm
 population = initialization(Data,Population_Size,Max_weight)
-person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
-
+while(True):
+    try:
+        person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
+        break
+    except:
+        continue
+        
 solution_array = []
 for i in range(len(Data)):
     solution_array.append(0)
