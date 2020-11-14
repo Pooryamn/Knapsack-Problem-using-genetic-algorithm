@@ -1,6 +1,7 @@
 import csv  
 import random
 import numpy as np
+from datetime import datetime
 
 def Read_Data():
     with open('Data2.csv') as csv_file:
@@ -181,11 +182,13 @@ Casting_Data(Data)
 population = initialization(Data,Population_Size,Max_weight)
 while(True):
     try:
+        start =  datetime.now()
         person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
+        RunTime = datetime.now() - start
         break
     except:
         continue
-        
+
 solution_array = []
 for i in range(len(Data)):
     solution_array.append(0)
@@ -194,5 +197,5 @@ for item in person:
 
 print('Solution : {}'.format(solution_array))
 print('Profit : {}'.format(profit))
-
+print('Time : {}'.format('.'+str(RunTime).split('.')[1]+' sec'))
 
