@@ -2,9 +2,119 @@ import csv
 import random
 import numpy as np
 from datetime import datetime
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QFont
+
+
+class Window(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Knapsack")
+        self.setGeometry(50,50,350,350)
+        self.setFixedWidth(960)
+        self.setFixedHeight(540)
+        self.UI()
+        
+
+    def UI(self):
+        ########## Labels #########
+            ## Back Ground image
+        lbl_BG = QLabel("",self)
+        lbl_BG.setGeometry(0,0,960,540)
+        lbl_BG.setStyleSheet("border-image: url(img/BG.png);")
+            ## weight label 
+        lbl_weight = QLabel("     Max Weight : ",self)
+        lbl_weight.setGeometry(80,20,200,30)
+        lbl_weight.setFont(QFont('Times', 12))
+            ## Population size label
+        lbl_population = QLabel("Population Size : ",self)
+        lbl_population.setGeometry(80,50,200,30)
+        lbl_population.setFont(QFont('Times', 12))
+            ## generation label
+        lbl_weight = QLabel("      Generation : ",self)
+        lbl_weight.setGeometry(80,80,200,30)
+        lbl_weight.setFont(QFont('Times', 12))
+            ## solution label
+        lbl_solution = QLabel("Solution : ",self)
+        lbl_solution.setGeometry(40,170,200,30)
+        lbl_solution.setFont(QFont('Times', 12))
+            ## Profit label
+        lbl_profit = QLabel("      Profit : ",self)
+        lbl_profit.setGeometry(41,340,200,30)
+        lbl_profit.setFont(QFont('Times', 12))
+            ## Time label
+        lbl_Time = QLabel("Run Time : ",self)
+        lbl_Time.setGeometry(40,370,200,30)
+        lbl_Time.setFont(QFont('Times', 12))
+
+        ########## LineEdits #########
+            ## weight txt
+        self.txt_weight = QLineEdit(self)
+        self.txt_weight.setGeometry(240,23,200,25)
+        self.txt_weight.setFont(QFont('Times', 10))
+            ## population txt
+        self.txt_population = QLineEdit(self)
+        self.txt_population.setGeometry(240,53,200,25)
+        self.txt_population.setFont(QFont('Times', 10))
+            ## generation txt
+        self.txt_generation = QLineEdit(self)
+        self.txt_generation.setGeometry(240,83,200,25)
+        self.txt_generation.setFont(QFont('Times', 10))
+            ## Solution 
+        self.txt_solution = QLineEdit(self)
+        self.txt_solution.setEnabled(False)
+        self.txt_solution.setGeometry(40,200,400,120)
+            ## Profit txt
+        self.txt_Profit = QLineEdit(self)
+        self.txt_Profit.setEnabled(False)
+        self.txt_Profit.setGeometry(150,343,100,25)
+        self.txt_Profit.setFont(QFont('Times', 10))
+            ## Time txt
+        self.txt_Time = QLineEdit(self)
+        self.txt_Time.setEnabled(False)
+        self.txt_Time.setGeometry(150,373,100,25)
+        self.txt_Time.setFont(QFont('Times', 10))
+
+        ########## PushButton #########
+        btn = QPushButton("Start",self)
+        btn.setGeometry(180,120,100,30)
+        btn.clicked.connect(self.on_btn_clicked)
+        self.show()
+
+    def on_btn_clicked(self):
+        if (self.Check_data() == False):
+             QMessageBox.warning(self,'Input Error','Enter Valid Input')
+        else:
+            # Do main
+            Max_iteration= int(self.txt_generation.text())
+            Population_Size= int(self.txt_population.text())
+            Max_weight= int(self.txt_weight.text())
+            solution_array,profit,Ret_time=Main_Func(Max_iteration,Population_Size,Max_weight)
+
+            self.txt_solution.setText(str(solution_array))
+            self.txt_Profit.setText(str(profit))
+            self.txt_Time.setText(str(Ret_time))
+
+
+    def Check_data(self):
+        try:
+            int(self.txt_weight.text())
+            int(self.txt_generation.text())
+            int(self.txt_population.text())
+            return True 
+        except:
+            return False
+        
+
+
+def main():
+    App = QApplication(sys.argv)
+    W = Window()
+    sys.exit(App.exec_())   
 
 def Read_Data():
-    with open('Data2.csv') as csv_file:
+    with open('Data.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
             Data.append(row)
@@ -168,34 +278,37 @@ def Read_config():
 
     return Max_iteration,Population_Size,Max_weight
 
-# main
+def Main_Func(Max_iteration,Population_Size,Max_weight):
+    global Data
+    Data = []
 
-Data = []
-
-Max_iteration,Population_Size,Max_weight= Read_config()
+    #Max_iteration,Population_Size,Max_weight= Read_config()
 
 
-Read_Data()
-Casting_Data(Data)
+    Read_Data()
+    Casting_Data(Data)
 
-# algorithm
-population = initialization(Data,Population_Size,Max_weight)
-while(True):
-    try:
-        start =  datetime.now()
-        person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
-        RunTime = datetime.now() - start
-        break
-    except:
-        continue
+    # algorithm
+    population = initialization(Data,Population_Size,Max_weight)
+    while(True):
+        try:
+            start =  datetime.now()
+            person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
+            RunTime = datetime.now() - start
+            break
+        except:
+            continue
 
-solution_array = []
-for i in range(len(Data)):
-    solution_array.append(0)
-for item in person:
-    solution_array[item] = 1
+    solution_array = []
+    for i in range(len(Data)):
+        solution_array.append(0)
+    for item in person:
+        solution_array[item] = 1
+    Ret_time = '.'+str(RunTime).split('.')[1]+' sec'
+    return solution_array,profit,Ret_time
+    #print('Solution : {}'.format(solution_array))
+    #print('Profit : {}'.format(profit))
+    #print('Time : {}'.format('.'+str(RunTime).split('.')[1]+' sec'))
 
-print('Solution : {}'.format(solution_array))
-print('Profit : {}'.format(profit))
-print('Time : {}'.format('.'+str(RunTime).split('.')[1]+' sec'))
-
+if __name__ == '__main__':
+    main()
