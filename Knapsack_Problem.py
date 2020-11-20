@@ -91,11 +91,19 @@ class Window(QWidget):
             Max_iteration= int(self.txt_generation.text())
             Population_Size= int(self.txt_population.text())
             Max_weight= int(self.txt_weight.text())
-            solution_array,profit,Ret_time=Main_Func(Max_iteration,Population_Size,Max_weight)
+            solution_array,profit,Ret_time,Profit_arr=Main_Func(Max_iteration,Population_Size,Max_weight)
 
             self.txt_solution.setText(str(solution_array))
             self.txt_Profit.setText(str(profit))
             self.txt_Time.setText(str(Ret_time))
+
+             # plot
+            plt.figure(figsize=(12,8))
+            plt.plot(Profit_arr,color='black')
+            plt.title('Profit Line Chart')
+            plt.xlabel('Iteration')
+            plt.ylabel('Max Profit')
+            plt.show()
 
 
     def Check_data(self):
@@ -313,16 +321,9 @@ def Main_Func(Max_iteration,Population_Size,Max_weight):
     for item in person:
         solution_array[item] = 1
     
-    # plot
-    plt.plot(Profit_arr)
-    plt.title('Profit Line Chart')
-    plt.xlabel('Iteration')
-    plt.ylabel('Max Profit')
-    plt.show()
-
 
     Ret_time = '.'+str(RunTime).split('.')[1]+' sec'
-    return solution_array,profit,Ret_time
+    return solution_array,profit,Ret_time,Profit_arr
     #print('Solution : {}'.format(solution_array))
     #print('Profit : {}'.format(profit))
     #print('Time : {}'.format('.'+str(RunTime).split('.')[1]+' sec'))
