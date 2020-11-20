@@ -5,6 +5,7 @@ from datetime import datetime
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
+import matplotlib.pyplot as plt
 
 
 class Window(QWidget):
@@ -182,7 +183,7 @@ def initialization(Data,Population_Size,Max_weight):
 def Knapsack(Max_iteration,Max_weight,population,Data):
     
     Data_size = len(Data)
-
+    Profit_arr = []
     # iterations
     for iter in range(Max_iteration):
         
@@ -226,7 +227,7 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
         
         # selecting randem children population using thier probability
         Children_no = int(len(fit_arr))
-        parent_no = int(0.80 * len(population))
+        parent_no = int(len(population))
         
         selected_child = random.choices(feasible_population,weights=P_array,k=Children_no)
         selected_parent = random.choices(population,k=Children_no)
@@ -237,6 +238,13 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
         # shffling the population
         random.shuffle(population)
 
+        Tmp_arr = []
+        # finding iteration profit
+        for person in population:
+            Tmp_arr.append(Fitness(person,Max_weight,Data))
+        
+        Profit_arr.append(max(Tmp_arr))
+
     # final population:
     fit_arr = []
     for person in population:
@@ -245,7 +253,7 @@ def Knapsack(Max_iteration,Max_weight,population,Data):
             fit_arr.append(tmp)
 
     max_index = fit_arr.index(max(fit_arr))
-    return population[max_index],fit_arr[max_index]
+    return population[max_index],fit_arr[max_index],Profit_arr
 
 def Read_config():
     
@@ -293,7 +301,7 @@ def Main_Func(Max_iteration,Population_Size,Max_weight):
     while(True):
         try:
             start =  datetime.now()
-            person,profit = Knapsack(Max_iteration,Max_weight,population,Data)
+            person,profit,Profit_arr = Knapsack(Max_iteration,Max_weight,population,Data)
             RunTime = datetime.now() - start
             break
         except:
@@ -304,6 +312,15 @@ def Main_Func(Max_iteration,Population_Size,Max_weight):
         solution_array.append(0)
     for item in person:
         solution_array[item] = 1
+    
+    # plot
+    plt.plot(Profit_arr)
+    plt.title('Profit Line Chart')
+    plt.xlabel('Iteration')
+    plt.ylabel('Max Profit')
+    plt.show()
+
+
     Ret_time = '.'+str(RunTime).split('.')[1]+' sec'
     return solution_array,profit,Ret_time
     #print('Solution : {}'.format(solution_array))
